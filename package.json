@@ -20,9 +20,12 @@
   },
   "homepage": "https://github.com/Adam556678/talky#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "joi": "^18.0.1",
+    "nodemailer": "^7.0.9",
     "pg": "^8.16.3",
     "socket.io": "^4.8.1"
   },

@@ -7,7 +7,8 @@ const createDBTables = async () => {
         name VARCHAR(50) NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
         password VARCHAR(100) NOT NULL,
-        phone VARCHAR(50) UNIQUE
+        phone VARCHAR(50) UNIQUE,
+        verified BOOLEAN DEFAULT FALSE
     );
 
     CREATE TABLE IF NOT EXISTS groups (
@@ -47,6 +48,14 @@ const createDBTables = async () => {
         contact_id INT REFERENCES users(id) ON DELETE CASCADE,
         created_at TIMESTAMP DEFAULT NOW(),
         UNIQUE(user_id, contact_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS userOTP(
+        id SERIAL PRIMARY KEY,
+        userId INT REFERENCES users(id) ON DELETE CASCADE,
+        otp VARCHAR(10) NOT NULL,
+        createdAt TIMESTAMP DEFAULT NOW(),
+        expires TIMESTAMP NOT NULL
     );`;
 
     try {
