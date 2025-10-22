@@ -53,7 +53,7 @@ const createDBTables = async () => {
     CREATE TABLE IF NOT EXISTS userOTP(
         id SERIAL PRIMARY KEY,
         userId INT REFERENCES users(id) ON DELETE CASCADE,
-        otp VARCHAR(10) NOT NULL,
+        otp VARCHAR(100) NOT NULL,
         createdAt TIMESTAMP DEFAULT NOW(),
         expires TIMESTAMP NOT NULL
     );`;

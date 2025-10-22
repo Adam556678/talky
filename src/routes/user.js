@@ -30,7 +30,7 @@ router.post("/signup", validateUser, async (req, res, next) => {
 });
 
 // verify user - POST
-router.post("/verify/:id", async (req, res) => {
+router.post("/verify/:id", async (req, res, next) => {
     try {
         const {id} = req.params;
         const {code} = req.body;
