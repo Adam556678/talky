@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-const {createUser, getUserById} = require("../models/userModel.js");
+const {createUser, getUserById, getUserByEmail} = require("../models/userModel.js");
 const validateUser = require("../middlewares/inputValidatior.js");
 const {hashPassword, comparePassword} = require("../helpers/hash.js");
 const sendVerificationOTP = require("../helpers/otp.js");
@@ -67,6 +68,34 @@ router.post("/verify/:id", async (req, res, next) => {
         await deleteOTP(otp.id);
         
         return res.status(200).json({message: "User verified successfully"});
+    } catch (error) {
+        next(error);
+    }
+});
+
+router.post("/login", async (req, res) => {
+    try {
+        const {email, password} = req.body;
+        
+        // get user
+        const user = await getUserByEmail(email);
+        if (!user)
+            return res.status(401).json({message: "Invalid Credentails"});
+        
+        // compare passwords
+        const isMatch = await comparePassword(password, user.password);
+        if (!isMatch)
+            return res.status(401).json({message: "Invalid Credentails"});
+        
+        // check if user is verified
+        if (!user.verified)
+            return res.status(403).json({message: "Please verify your email"});
+        
+        // create user's JWT
+        const token = jwt.sign({userId: user.id}, process.env.JWT_SECRET);
+        res.cookie('token', token, {httpOnly: true});
+        
+        return res.status(200).json({message: "Login is successful"});
     } catch (error) {
         next(error);
     }
